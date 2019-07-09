@@ -1,0 +1,25 @@
+version: '3'
+services:
+  redis:
+    image: redis:5
+    ports:
+      - "6379:6379"
+  web:
+    build: .
+    image: hx/sock:dev
+    command: ["./wait-for-it.sh", "redis:6379", "--", "python", "manage.py", "runserver", "0.0.0.0:8000"]
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+    networks:
+      default:
+      public:
+        aliases:
+          - sock.localhost
+
+networks:
+  public:
+
