@@ -15,7 +15,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sock.settings")
 
 # if dotenv file, load it
 dotenv_path = os.environ.get(
-    'HXMIRADOR_DOTENV_PATH', 'sock.settings')
+    'SOCK_DOTENV_PATH', 'sock.settings')
 if dotenv_path:
     load_dotenv(dotenv_path)
 
