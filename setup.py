@@ -32,7 +32,7 @@ test_requirements = [
 
 setup(
     name="sock",
-    version=VERSION,
+    version=version,
     description="django channels tutorial",
     author="nmaekawa",
     author_email="nmaekawa@g.harvard.edu",
