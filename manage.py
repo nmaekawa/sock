@@ -1,11 +1,20 @@
 #!/usr/bin/env python
 """Django's command-line utility for administrative tasks."""
+from dotenv import load_dotenv
 import os
 import sys
 
 
 def main():
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'sock.settings')
+    # if dotenv file, load it
+    dotenv_path = os.environ.get('SOCK_DOTENV_PATH', None)
+    if dotenv_path:
+        load_dotenv(dotenv_path)
+
+    # define settings if not in environment, default is "dev"
+    if os.environ.get("DJANGO_SETTINGS_MODULE", None) is None:
+        os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sock.settings")
+
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:

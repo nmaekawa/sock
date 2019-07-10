@@ -24,6 +24,7 @@ requirements = [
     'Django',
     'channels',
     'channels_redis',
+    'python-dotenv',
 ]
 
 test_requirements = [
