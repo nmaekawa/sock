@@ -25,7 +25,11 @@ SECRET_KEY = '27vg42vchndiz##0_l=(ufk4&@x_^b6hok6i340u(p+(q%ogy_'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost',  '127.0.0.1']
+allowed_hosts_other = os.environ.get('SOCK_ALLOWED_HOSTS', '')
+if allowed_hosts_other:
+    ALLOWED_HOSTS.extend(allowed_hosts_other.split())
+
 
 
 # Application definition
