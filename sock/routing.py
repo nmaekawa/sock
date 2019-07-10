@@ -4,6 +4,8 @@ from channels.routing import URLRouter
 
 import chat.routing
 
+ASGI_APPLICATION = 'sock.routing.application'
+
 application = ProtocolTypeRouter({
     # (http->django views is added by default)
     'websocket': AuthMiddlewareStack(
