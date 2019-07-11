@@ -5,6 +5,7 @@ defined in the ASGI_APPLICATION setting
 from dotenv import load_dotenv
 import os
 from channels.routing import get_default_application
+import django
 
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sock.settings")
