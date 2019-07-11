@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 
+PROJECT_NAME = 'sock'
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -20,10 +22,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '27vg42vchndiz##0_l=(ufk4&@x_^b6hok6i340u(p+(q%ogy_'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY',
+                            'cf6077c2-6081-4bd8-94d1-7b40d94bd0de')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['localhost',  '127.0.0.1']
 allowed_hosts_other = os.environ.get('SOCK_ALLOWED_HOSTS', '')
@@ -55,7 +58,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'sock.urls'
+ROOT_URLCONF = PROJECT_NAME + '.urls'
 
 TEMPLATES = [
     {
@@ -73,16 +76,18 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'sock.wsgi.application'
+WSGI_APPLICATION = PROJECT_NAME + '.wsgi.application'
 
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
-
+DB_PATH = os.environ.get(
+    'SOCK_SQLITE3_PATH',
+    os.path.join(BASE_DIR, PROJECT_NAME + '_sqlite3.db'))
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': DB_PATH,
     }
 }
 
@@ -90,8 +95,8 @@ DATABASES = {
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
 
-"""
 AUTH_PASSWORD_VALIDATORS = [
+"""
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     },
@@ -104,8 +109,8 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
-]
 """
+]
 
 
 # Internationalization
@@ -122,6 +127,39 @@ USE_L10N = True
 USE_TZ = True
 
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'simple': {
+            'format': ('%(asctime)s|%(levelname)s [%(filename)s:%(funcName)s]'
+                       ' %(message)s')
+        },
+        'verbose': {
+            'format': '%(levelname)s\t%(asctime)s.%(msecs)03dZ\t%(name)s:%(lineno)s\t%(message)s',
+            'datefmt': '%Y-%m-%dT%H:%M:%S'
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+            'stream': 'ext://sys.stdout',
+        },
+    },
+    'loggers': {
+        'sock': {
+            'level': 'DEBUG',
+            'handlers': ['console'],
+            'propagate': True
+        },
+        'root': {
+            'level': 'DEBUG',
+            'handlers': ['console'],
+        },
+    }
+}
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 STATIC_URL = '/static/'
@@ -130,11 +168,13 @@ STATIC_ROOT = os.environ.get(
 
 # channels
 ASGI_APPLICATION = 'sock.routing.application'
+REDIS_HOST = os.environ.get('REDIS_HOST', 'redis')
+REDIS_PORT = os.environ.get('REDIS_PORT', '6379')
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            'hosts': [('redis', 6379)],
+            'hosts': [(REDIS_HOST, REDIS_PORT)],
         },
     }
 }

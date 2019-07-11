@@ -13,7 +13,7 @@ def main():
 
     # define settings if not in environment, default is "dev"
     if os.environ.get("DJANGO_SETTINGS_MODULE", None) is None:
-        os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sock.settings")
+        os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sock.settings.local")
 
     try:
         from django.core.management import execute_from_command_line

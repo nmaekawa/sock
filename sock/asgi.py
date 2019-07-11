@@ -8,11 +8,11 @@ from channels.routing import get_default_application
 import django
 
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sock.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sock.settings.dev")
 
 # if dotenv file, load it
 dotenv_path = os.environ.get(
-    'SOCK_DOTENV_PATH', 'sock.settings')
+    'SOCK_DOTENV_PATH', 'sock.settings.dev')
 if dotenv_path:
     load_dotenv(dotenv_path)
 
